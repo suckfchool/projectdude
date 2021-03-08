@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="/static/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>Chatbot UI</h1>
+    <div>
+      <div id="chatbox">
+        <p class="botText"><span>Chatterbot.</span></p>
+      </div>
+      <div id="userInput">
+        <input  id="textInput" type="text" name="msg" placeholder="Message" />
+        <button class="btn btn-primary" id="buttonInput" type="submit" >Send</button>
+      </div>
+      <script>
+         getBotResponse=()=> {
+          var rawText = $("#textInput").val();
+          var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+          $("#textInput").val("");
+          $("#chatbox").append(userHtml);
+          document
+            .querySelector("#userInput")
+            .scrollIntoView({ block: "start", behavior: "smooth" });
+          $.get("/get", { msg: rawText }).done(function (data) {
+            
+            var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+            $("#chatbox").append(botHtml);
+            document
+            .querySelector("#userInput")
+              .scrollIntoView({ block: "start", behavior: "smooth" });
+          });
+        }
+        $("#textInput").keypress(function (e) {
+          if (e.which == 13) {
+            getBotResponse();
+          }
+        });
+        $("#buttonInput").click(function () {
+          getBotResponse();
+        });
+      </script>
+    </div>
+  </body>
+</html>
